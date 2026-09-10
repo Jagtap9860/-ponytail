@@ -1,0 +1,2 @@
+[console_scripts]
+physics-agent = physics_agent.cli:main
