@@ -1,0 +1,48 @@
+name: physics-agent CI
+
+on:
+  push:
+    paths:
+      - "physics-ai-agent/**"
+      - ".github/workflows/physics-agent-ci.yml"
+  pull_request:
+    paths:
+      - "physics-ai-agent/**"
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    defaults:
+      run:
+        working-directory: physics-ai-agent
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Run test suite
+        run: python -m pytest tests/ -q
+
+      - name: CLI smoke test (every README quick-start command)
+        run: |
+          physics-agent solve "A 10 kg mass is attached to a spring with k = 500 N/m. Find its natural frequency." | grep -q "Final Answer"
+          physics-agent convert "3000 rpm" "rad/s" | grep -q "314.159"
+          physics-agent constants --search planck | grep -qi "planck"
+          physics-agent formulas --search "natural frequency" | grep -qi "natural frequency"
+          physics-agent tools | grep -q "convert_units"
+          physics-agent demo machine-vibration | grep -q "7.958 Hz"
+          physics-agent demo resonance | grep -q "0.92%"
+
+      - name: Council review (must report zero open criticals)
+        run: physics-agent council review --fail-on critical

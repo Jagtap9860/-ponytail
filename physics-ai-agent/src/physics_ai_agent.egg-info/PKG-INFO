@@ -1,0 +1,117 @@
+Metadata-Version: 2.4
+Name: physics-ai-agent
+Version: 0.2.0
+Summary: Interactive physics reasoning engine: LLM reasoning + deterministic physics solvers.
+Author: Physics AI Agent contributors
+License: MIT
+Keywords: physics,engineering,vibrations,fea,numerical-methods,ai-agent
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy>=1.26
+Requires-Dist: scipy>=1.11
+Requires-Dist: sympy>=1.12
+Requires-Dist: matplotlib>=3.8
+Requires-Dist: pandas>=2.0
+Requires-Dist: pyyaml>=6.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Provides-Extra: docs
+Requires-Dist: sphinx>=7.0; extra == "docs"
+Dynamic: license-file
+
+# Physics AI Agent
+
+[![physics-agent CI](https://github.com/Jagtap9860/-ponytail/actions/workflows/physics-agent-ci.yml/badge.svg)](https://github.com/Jagtap9860/-ponytail/actions/workflows/physics-agent-ci.yml)
+
+An **interactive physics reasoning engine**: LLM reasoning up front,
+deterministic computational tools for every calculation.
+
+```
+LLM → problem interpretation → tool selection → physics solver
+                                       → verification → LLM explanation
+```
+
+The agent follows a 10-step physicist's workflow (understand → classify →
+model → principles → derive → units → symbolics → numerics → verify →
+interpret) across 38 domains — mechanics to vibrations, fluids, thermo, EM,
+optics, quantum, relativity, FEA fundamentals, and multiphysics — with
+explanation levels (beginner → research) and modes (guided/direct/teaching/
+exam/research/engineering).
+
+## Quick start
+
+```bash
+cd physics-ai-agent
+pip install -e ".[dev]"        # or: pip install -r requirements.txt
+cp .env.example .env           # optional; default provider is offline "echo"
+
+# Classify + solve in one shot
+physics-agent solve "A 10 kg mass is attached to a spring with k = 500 N/m. Find its natural frequency."
+
+# Interactive chat (offline-capable)
+physics-agent chat
+
+# Utilities
+physics-agent convert "3000 rpm" "rad/s"
+physics-agent constants --search planck
+physics-agent formulas --search "natural frequency"
+physics-agent demo machine-vibration
+```
+
+Python API:
+
+```python
+from physics_agent.agent.orchestrator import Orchestrator
+answer = Orchestrator().solve(
+    "20 kg machine on k=50000 N/m, c=100 Ns/m. Natural frequency and resonance?"
+)
+print(answer.report())          # 13-section engineering response
+print(answer.result.value, answer.result.unit)
+```
+
+Deterministic tools (no LLM needed):
+
+```python
+from physics_agent.physics import vibrations
+r = vibrations.sdof_free(m=10.0, k=500.0)
+print(r)  # fn=1.125 Hz, wn=7.07 rad/s, ...
+```
+
+## Layout
+
+- `src/physics_agent/` — `agent/` orchestrator & reasoning · `physics/`
+  domain solvers · `mathematics/` numerical methods · `units/` conversion &
+  dimensions · `knowledge/` formulas/constants/concepts · `solvers/`
+  symbolic/numeric/ODE/eigen/FFT · `visualization/` plots · `llm/`
+  provider abstraction · `tools/` callable tool registry · `cli.py`
+- `data/` — formula DB, CODATA constants, examples, knowledge notes
+- `tests/` — pytest suite (run with `pytest`)
+- `examples/` — worked basic/engineering/vibration/advanced problems
+- `docs/` — `architecture.md` (system/agent/data/tool design, roadmap),
+  `physics-methodology.md`, `contribution-guide.md`
+
+## The Council (adversarial review)
+
+Five egotistic reviewers — a physicist, a numerical analyst, a software
+engineer, a chaos tester, and a docs auditor — hunt bugs, then
+cross-examine *each other's findings* (reproduce-or-refute + severity vote)
+before anything counts. CI fails on open criticals:
+
+```bash
+physics-agent council review            # hunt → cross-examine → verdict
+physics-agent council review --fail-on critical --write council-report.md
+```
+
+Charter + ego scoring: `docs/council.md`.
+
+## Design guarantees
+
+- **No LLM arithmetic**: critical numbers always come from tested solvers.
+- **Units gate**: SI/dimensional consistency is checked before results count.
+- **Provenance**: known physics vs assumption vs approximation vs calculated
+  vs needs-validation are labeled, never blurred.
+- **No fabrication**: equations, properties, references, or data are never
+  invented; gaps are stated, and safety-critical answers demand validation.
+
+See `docs/architecture.md` for the full blueprint and roadmap.

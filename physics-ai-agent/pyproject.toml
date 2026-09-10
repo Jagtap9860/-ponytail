@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "physics-ai-agent"
+version = "0.2.0"
+description = "Interactive physics reasoning engine: LLM reasoning + deterministic physics solvers."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Physics AI Agent contributors" }]
+keywords = ["physics", "engineering", "vibrations", "fea", "numerical-methods", "ai-agent"]
+dependencies = [
+  "numpy>=1.26",
+  "scipy>=1.11",
+  "sympy>=1.12",
+  "matplotlib>=3.8",
+  "pandas>=2.0",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+docs = ["sphinx>=7.0"]
+
+[project.scripts]
+physics-agent = "physics_agent.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
