@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 
 @dataclass
 class Classification:
+    """Classification: domain, complexity, methods, suggested tools."""
     domain: str
     subdomain: str
     problem_type: str
@@ -114,6 +115,7 @@ _PLOT_HINTS = ("plot", "graph", "frf", "bode", "fft", "spectrum", "response",
 
 
 def classify(text: str) -> Classification:
+    """Keyword-scored domain classifier over the 14 domain groups."""
     t = text.lower()
     scores: dict[str, float] = {}
     for key, (_, kws, _) in _DOMAINS.items():

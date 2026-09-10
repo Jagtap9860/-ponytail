@@ -8,16 +8,19 @@ import pandas as pd
 
 
 def linear_solve(A: np.ndarray, b: np.ndarray) -> np.ndarray:
+    """Solve the linear system A*x = b."""
     A, b = np.asarray(A, float), np.asarray(b, float)
     return np.linalg.solve(A, b)
 
 
 def least_squares(A: np.ndarray, b: np.ndarray) -> tuple[np.ndarray, float]:
+    """Least-squares solution and residual of A*x ~= b."""
     x, res, *_ = np.linalg.lstsq(np.asarray(A, float), np.asarray(b, float), rcond=None)
     return x, float(res[0]) if res.size else 0.0
 
 
 def condition_number(A: np.ndarray) -> float:
+    """2-norm condition number of A."""
     return float(np.linalg.cond(np.asarray(A, float)))
 
 
@@ -28,6 +31,7 @@ def gradient_descent(
     lr: float = 0.1,
     steps: int = 500,
 ) -> np.ndarray:
+    """Fixed-step gradient descent from x0."""
     x = np.asarray(x0, float).copy()
     for _ in range(steps):
         x -= lr * grad(x)
@@ -35,6 +39,7 @@ def gradient_descent(
 
 
 def monte_carlo_pi(n: int = 200_000, seed: int = 0) -> float:
+    """Seeded Monte Carlo estimate of pi."""
     rng = np.random.default_rng(seed)
     p = rng.random((n, 2))
     return float(4.0 * np.mean(np.sum(p**2, axis=1) <= 1.0))

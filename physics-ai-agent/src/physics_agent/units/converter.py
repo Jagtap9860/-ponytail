@@ -9,6 +9,11 @@ import math
 import re
 from dataclasses import dataclass
 
+from physics_agent.knowledge.constants import get_constant
+
+_G0 = get_constant("g0").value      # kgf defined via standard gravity (exact conventional)
+_E_JOULE = get_constant("e").value  # 1 eV in joules (exact by SI definition)
+
 # unit -> (SI factor, SI unit, dimension key)
 _LINEAR_UNITS: dict[str, tuple[float, str, str]] = {}
 
@@ -53,7 +58,7 @@ _reg(("mN",), 1e-3, "N", "F")
 _reg(("lbf", "lb_f", "pound_force"), 4.4482216152605, "N", "F")
 _reg(("ozf",), 0.2780138509537812, "N", "F")
 _reg(("dyne", "dyn"), 1e-5, "N", "F")
-_reg(("kgf", "kp"), 9.80665, "N", "F")
+_reg(("kgf", "kp"), _G0, "N", "F")
 # Pressure (Pa)
 _reg(("Pa", "pascal"), 1.0, "Pa", "P")
 _reg(("kPa",), 1e3, "Pa", "P")
@@ -75,7 +80,7 @@ _reg(("cal",), 4.184, "J", "E")
 _reg(("kcal",), 4184.0, "J", "E")
 _reg(("btu", "BTU"), 1055.05585262, "J", "E")
 _reg(("kWh", "kwh"), 3.6e6, "J", "E")
-_reg(("eV", "ev"), 1.602176634e-19, "J", "E")
+_reg(("eV", "ev"), _E_JOULE, "J", "E")
 _reg(("erg",), 1e-7, "J", "E")
 _reg(("ft_lbf", "ft-lbf", "ftlb"), 1.3558179483314004, "J", "E")
 # Power (W)
@@ -177,9 +182,11 @@ class Quantity:
     unit: str
 
     def to_si(self) -> tuple[float, str]:
+        """Convert this quantity to SI; return (value, unit)."""
         return UnitConverter.to_si(self.value, self.unit)
 
     def to(self, target: str) -> float:
+        """Convert this quantity to the target unit."""
         return UnitConverter.convert(self.value, self.unit, target)
 
 
@@ -200,6 +207,7 @@ class UnitConverter:
 
     @staticmethod
     def to_si(value: float, unit: str) -> tuple[float, str]:
+        """Convert value+unit to SI."""
         u = UnitConverter._canon(unit)
         if u in ("degC", "°C", "celsius", "Celsius"):
             return value + 273.15, "K"
@@ -210,6 +218,7 @@ class UnitConverter:
 
     @staticmethod
     def from_si(si_value: float, unit: str) -> float:
+        """Convert an SI value to the target unit."""
         u = UnitConverter._canon(unit)
         if u in ("degC", "°C", "celsius", "Celsius"):
             return si_value - 273.15
@@ -231,6 +240,7 @@ class UnitConverter:
 
     @staticmethod
     def convert(value: float, from_unit: str, to_unit: str) -> float:
+        """Convert between units via SI (Hz<->rad/s allowed)."""
         src = UnitConverter._canon(from_unit)
         dst = UnitConverter._canon(to_unit)
         if (src, dst) in UnitConverter._CROSS:
@@ -261,6 +271,7 @@ class UnitConverter:
 
     @staticmethod
     def dimension_key(unit: str) -> str:
+        """Compatibility key for a unit."""
         u = UnitConverter._canon(unit)
         if u in _TEMP_OFFSET:
             return "TH"

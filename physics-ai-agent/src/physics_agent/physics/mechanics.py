@@ -43,11 +43,13 @@ def projectile(v0: float, theta_deg: float, y0: float = 0.0, g: float = G0) -> d
 
 
 def kinetic_energy(m: float, v: float) -> PhysicsResult:
+    """Kinetic energy KE = 0.5*m*v^2."""
     require_positive(m=m)
     return PhysicsResult("kinetic_energy", 0.5 * m * v**2, "J", "KE = ½mv²", "analytic")
 
 
 def gravitational_force(m1: float, m2: float, r: float) -> PhysicsResult:
+    """Newton gravitation F = G*m1*m2/r^2 (point masses)."""
     require_positive(m1=m1, m2=m2, r=r)
     return PhysicsResult("gravitational_force", G * m1 * m2 / r**2, "N",
                          "F = G·m1·m2/r²", "analytic", ["point masses"])
@@ -101,6 +103,7 @@ def torsion_bar(T: float, L: float, GJ: float) -> PhysicsResult:
 
 
 def moment_of_inertia_solid_cylinder(m: float, r: float) -> PhysicsResult:
+    """Solid cylinder I = 0.5*m*r^2 about its axis."""
     require_positive(m=m, r=r)
     return PhysicsResult("moment_of_inertia", 0.5 * m * r**2, "kg*m^2",
                          "I = ½mr²", "analytic")

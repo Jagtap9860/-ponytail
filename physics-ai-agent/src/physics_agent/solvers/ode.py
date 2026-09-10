@@ -10,6 +10,7 @@ from scipy.integrate import solve_ivp
 
 @dataclass
 class ODEResult:
+    """ODE solution: time grid, state history, success flag."""
     t: np.ndarray
     y: np.ndarray  # shape (n_states, n_times)
     success: bool
@@ -25,6 +26,7 @@ def solve_ivp_system(
     rtol: float = 1e-9,
     atol: float = 1e-12,
 ) -> ODEResult:
+    """General first-order system via solve_ivp."""
     sol = solve_ivp(np.asarray(fun) if False else fun, t_span, np.asarray(y0, dtype=float),
                     t_eval=t_eval, method=method, rtol=rtol, atol=atol)
     return ODEResult(t=sol.t, y=sol.y, success=bool(sol.success), message=str(sol.message))
@@ -40,6 +42,14 @@ def solve_sdof(
     f = force or (lambda t: 0.0)
 
     def rhs(t: float, y: np.ndarray) -> np.ndarray:
+        """Rhs.
+        
+        Args:
+            t: float
+            y: np.ndarray
+        
+        Returns:
+            np.ndarray"""
         x, v = y
         return np.array([v, (f(t) - c * v - k * x) / m])
 

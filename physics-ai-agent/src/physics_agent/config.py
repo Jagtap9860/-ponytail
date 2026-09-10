@@ -46,6 +46,7 @@ _settings: Settings | None = None
 
 
 def get_settings() -> Settings:
+    """Return the cached process-wide Settings."""
     global _settings
     if _settings is None:
         _settings = Settings()

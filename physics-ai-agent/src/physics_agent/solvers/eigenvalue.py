@@ -9,12 +9,14 @@ from scipy import linalg as _la
 
 @dataclass
 class EigenResult:
+    """Eigenvalues, eigenvectors, modal frequencies (Hz)."""
     eigenvalues: np.ndarray       # ascending, real for symmetric problems
     eigenvectors: np.ndarray      # columns; mass-normalized if M given
     natural_freq_hz: np.ndarray   # sqrt(λ)/2π for vibration problems
 
 
 def modal_analysis(A: np.ndarray, symmetric: bool = True) -> EigenResult:
+    """Standard eigenproblem; symmetric solver by default."""
     A = np.asarray(A, dtype=float)
     if symmetric:
         w, v = _la.eigh(A)

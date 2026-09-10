@@ -11,6 +11,7 @@ from scipy import optimize as _optimize
 
 @dataclass
 class RootResult:
+    """Bracketed-root result: root, iterations, convergence, residual."""
     root: float
     iterations: int
     converged: bool
@@ -54,6 +55,7 @@ def fit_curve(
 
 
 def interpolate(x: np.ndarray, y: np.ndarray, kind: str = "cubic") -> Callable[[np.ndarray], np.ndarray]:
+    """1-D interpolating function (extrapolates outside range)."""
     from scipy.interpolate import interp1d
 
     return interp1d(np.asarray(x), np.asarray(y), kind=kind, fill_value="extrapolate")  # type: ignore[return-value]

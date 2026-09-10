@@ -5,6 +5,7 @@ from physics_agent.agent.modes import DISCLAIMER_SAFETY, level_guidance, mode_gu
 
 
 def physical_meaning(domain: str, headline: str) -> str:
+    """Domain-aware physical-meaning hint for a headline result."""
     hints = {
         "vibrations": ("Compare fn to excitation: separation margin and damping decide whether "
                        "motion stays small or amplifies toward resonance."),
@@ -19,6 +20,7 @@ def physical_meaning(domain: str, headline: str) -> str:
 
 def render_report(sections: dict[str, str], level: int, mode: str,
                   simple: bool = False, safety_critical: bool = False) -> str:
+    """Render the 13-section (or shortened) markdown report."""
     order_full = ["Problem Understanding", "Given Data", "Required", "Assumptions",
                   "Physical Model", "Governing Principle", "Equation Derivation",
                   "Calculation", "Unit Check", "Verification", "Final Answer",

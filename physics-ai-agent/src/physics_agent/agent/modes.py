@@ -24,8 +24,10 @@ DISCLAIMER_SAFETY = (
 
 
 def level_guidance(level: int) -> str:
+    """Human description of explanation level 1-4."""
     return LEVELS.get(level, LEVELS[2])
 
 
 def mode_guidance(mode: str) -> str:
+    """Human description of an interaction mode."""
     return MODES.get(mode, MODES["direct"])

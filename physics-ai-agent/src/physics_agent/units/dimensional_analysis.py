@@ -25,6 +25,7 @@ class Dimension:
     J: Fraction = Fraction(0)
 
     def as_tuple(self) -> tuple[Fraction, ...]:
+        """Exponents as an (M,L,T,I,Th,N,J) tuple."""
         return (self.M, self.L, self.T, self.I, self.Theta, self.N, self.J)
 
     def __mul__(self, o: Dimension) -> Dimension:
@@ -39,6 +40,7 @@ class Dimension:
 
     @property
     def is_dimensionless(self) -> bool:
+        """True when every exponent is zero."""
         return all(a == 0 for a in self.as_tuple())
 
     def __str__(self) -> str:
@@ -128,6 +130,7 @@ def dimension_of(unit_or_quantity: str) -> Dimension:
 
 @dataclass(frozen=True)
 class DimCheck:
+    """Outcome of a dimensional consistency check."""
     ok: bool
     lhs: Dimension
     rhs: Dimension

@@ -31,10 +31,12 @@ def rearrange(equation: str, symbol: str) -> str:
 
 
 def differentiate(expr: str, symbol: str, order: int = 1) -> str:
+    """Symbolic derivative of expr to the given order."""
     return str(sp.diff(sp.sympify(expr), sp.Symbol(symbol), order))
 
 
 def integrate_symbolic(expr: str, symbol: str, a: float | None = None, b: float | None = None) -> str:
+    """Symbolic indefinite (or definite) integral."""
     x = sp.Symbol(symbol)
     e = sp.sympify(expr)
     res = sp.integrate(e, (x, a, b)) if a is not None and b is not None else sp.integrate(e, x)
@@ -42,4 +44,5 @@ def integrate_symbolic(expr: str, symbol: str, a: float | None = None, b: float 
 
 
 def simplify(expr: str) -> str:
+    """SymPy simplification of expr."""
     return str(sp.simplify(sp.sympify(expr)))

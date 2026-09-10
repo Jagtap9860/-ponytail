@@ -8,6 +8,7 @@ import numpy as np
 
 @dataclass
 class Spectrum:
+    """Single-sided amplitude spectrum with peak location."""
     freqs: np.ndarray
     amplitude: np.ndarray  # single-sided amplitude spectrum (same units as signal)
     peak_freq: float

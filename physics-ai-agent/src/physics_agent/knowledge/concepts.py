@@ -13,6 +13,7 @@ from dataclasses import dataclass, field
 
 @dataclass(frozen=True)
 class Concept:
+    """RAG-ready concept note with topic, equation, source, difficulty."""
     topic: str
     subtopic: str
     equation: str = ""
@@ -129,10 +130,12 @@ _c("relativity_energy", topic="Relativity", subtopic="Mass–energy",
 
 
 def lookup_concept(key: str) -> Concept:
+    """Fetch a concept note by key."""
     return CONCEPTS[key]
 
 
 def search_concepts(query: str, limit: int = 8) -> list[Concept]:
+    """Keyword search over concept notes."""
     q = query.lower()
     scored = []
     for c in CONCEPTS.values():

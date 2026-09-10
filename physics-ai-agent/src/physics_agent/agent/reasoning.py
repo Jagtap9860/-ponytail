@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 
 @dataclass
 class QuantitySpec:
+    """QuantitySpec. Fields: name, value, unit, status."""
     name: str
     value: float | None
     unit: str | None
@@ -15,6 +16,7 @@ class QuantitySpec:
 
 @dataclass
 class Assumption:
+    """Assumption. Fields: statement, justification, impact."""
     statement: str
     justification: str
     impact: str = ""
@@ -22,6 +24,7 @@ class Assumption:
 
 @dataclass
 class SolutionPlan:
+    """SolutionPlan. Fields: question, system, knowns, unknowns, assumptions, principles, equations, model, missing_info."""
     question: str
     system: str
     knowns: list[QuantitySpec] = field(default_factory=list)

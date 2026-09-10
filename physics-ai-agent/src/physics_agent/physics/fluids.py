@@ -22,6 +22,7 @@ def bernoulli_velocity(p1: float, p2: float, rho: float, v1: float = 0.0,
 
 
 def reynolds(rho: float, v: float, L: float, mu: float) -> PhysicsResult:
+    """Reynolds number Re = rho*v*L/mu."""
     require_positive(rho=rho, v=v, L=L, mu=mu)
     return PhysicsResult("reynolds", rho * v * L / mu, "dimensionless",
                          "Re = ρvL/μ", "analytic")
@@ -48,6 +49,7 @@ def pipe_pressure_drop(f: float, L: float, D: float, rho: float, v: float) -> Ph
 
 
 def poiseuille_drop(mu: float, L: float, Q: float, D: float) -> PhysicsResult:
+    """Laminar circular-pipe drop dP = 128*mu*L*Q/(pi*D^4)."""
     require_positive(mu=mu, L=L, Q=Q, D=D)
     return PhysicsResult("pressure_drop", 128 * mu * L * Q / (math.pi * D**4), "Pa",
                          "Δp = 128μLQ/πD⁴", "analytic",

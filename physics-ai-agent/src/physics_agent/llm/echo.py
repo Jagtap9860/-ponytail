@@ -9,9 +9,11 @@ from physics_agent.llm.base import LLMProvider, Message
 
 
 class EchoProvider(LLMProvider):
+    """Deterministic offline provider: template narration, zero network."""
     name = "echo"
 
     def complete(self, messages: list[Message], max_tokens: int = 1024) -> str:
+        """Narrate the request from a fixed template."""
         user = next((m.content for m in reversed(messages) if m.role == "user"), "")
         return (
             "[echo provider — offline narration]\n"

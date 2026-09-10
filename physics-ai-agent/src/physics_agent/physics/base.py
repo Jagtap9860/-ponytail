@@ -30,6 +30,7 @@ class PhysicsResult:
     provenance: str = "COMPUTED"
 
     def scalar(self) -> float:
+        """Return the value as a float."""
         return float(self.value)
 
     def __str__(self) -> str:
@@ -39,6 +40,7 @@ class PhysicsResult:
 
 @dataclass
 class DomainModule:
+    """Registered physics domain: key, title, keywords, description."""
     key: str
     title: str
     keywords: tuple[str, ...]
@@ -49,14 +51,17 @@ _REGISTRY: dict[str, DomainModule] = {}
 
 
 def register_domain(key: str, title: str, keywords: tuple[str, ...], description: str = "") -> None:
+    """Register a physics domain for classification and discovery."""
     _REGISTRY[key] = DomainModule(key, title, keywords, description)
 
 
 def domains() -> dict[str, DomainModule]:
+    """Return the domain registry (copy)."""
     return dict(_REGISTRY)
 
 
 def require_positive(**kw: float) -> None:
+    """Raise ValueError unless every named value is positive."""
     bad = {k: v for k, v in kw.items() if not v > 0}
     if bad:
         raise ValueError(f"Must be positive: {bad}.")

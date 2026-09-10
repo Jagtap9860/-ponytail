@@ -10,6 +10,7 @@ from physics_agent.llm.echo import EchoProvider
 
 
 class OpenAICompatibleProvider(LLMProvider):
+    """OpenAI-style HTTP client: OpenAI, vLLM, Ollama, LM Studio."""
     name = "openai_compatible"
 
     SYSTEM_GUARD = (
@@ -21,6 +22,7 @@ class OpenAICompatibleProvider(LLMProvider):
 
     def __init__(self, base_url: str | None = None, api_key: str | None = None,
                  model: str | None = None, timeout: float = 60.0):
+        """Configure base URL, API key, model, timeout."""
         s = get_settings()
         self.base_url = (base_url or s.openai_base_url).rstrip("/")
         self.api_key = api_key if api_key is not None else s.openai_api_key
@@ -28,6 +30,7 @@ class OpenAICompatibleProvider(LLMProvider):
         self.timeout = timeout
 
     def complete(self, messages: list[Message], max_tokens: int = 1024) -> str:
+        """POST /chat/completions; return assistant content."""
         payload = json.dumps({
             "model": self.model,
             "messages": [{"role": m.role, "content": m.content} for m in messages],
@@ -44,6 +47,7 @@ class OpenAICompatibleProvider(LLMProvider):
 
 
 def provider_from_env() -> LLMProvider:
+    """openai_compatible when configured, else the echo provider."""
     s = get_settings()
     if s.llm_provider == "openai_compatible" and s.openai_api_key:
         return OpenAICompatibleProvider()

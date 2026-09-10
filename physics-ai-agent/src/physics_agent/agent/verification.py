@@ -3,9 +3,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+from physics_agent.knowledge.constants import get_constant
+
+_C = get_constant("c").value
+
 
 @dataclass
 class Check:
+    """One verification check: name, pass/fail/NA, detail."""
     name: str
     passed: bool | None  # None = not applicable
     detail: str
@@ -13,13 +18,16 @@ class Check:
 
 @dataclass
 class VerificationReport:
+    """Check battery with all_passed and text summary."""
     checks: list[Check] = field(default_factory=list)
 
     @property
     def all_passed(self) -> bool:
+        """True unless some check failed."""
         return all(c.passed is not False for c in self.checks)
 
     def summary(self) -> str:
+        """One [PASS/FAIL/N/A] line per check."""
         return "\n".join(
             f"[{'PASS' if c.passed else ('N/A' if c.passed is None else 'FAIL')}] "
             f"{c.name}: {c.detail}" for c in self.checks)
@@ -33,7 +41,7 @@ def detect_errors(text: str, values: dict[str, float]) -> list[str]:
         if k in {"m", "mass", "rho", "density", "E", "k", "stiffness", "L", "length",
                  "D", "diameter", "T", "temp_K", "f", "freq"} and v <= 0:
             warns.append(f"'{k} = {v}' is non-positive — impossible for this quantity.")
-        if k in {"v", "velocity", "speed"} and abs(v) > 299792458.0:
+        if k in {"v", "velocity", "speed"} and abs(v) > _C:
             warns.append(f"|v| = {v} m/s exceeds c — check relativity regime/units.")
         if k in {"mu", "viscosity", "c", "damping", "h", "k_thermal"} and v < 0:
             warns.append(f"'{k} = {v}' is negative — unphysical for this coefficient.")
@@ -53,6 +61,7 @@ def detect_errors(text: str, values: dict[str, float]) -> list[str]:
 
 
 def limiting_case_note(domain: str) -> str:
+    """Domain-appropriate limiting-case expectation string."""
     return {
         "vibrations": "ζ→0 recovers undamped ωn; r≫1 response → mass line (X→F0/mω²).",
         "classical_mechanics": "μ→0 recovers frictionless; v≪c recovers Newtonian.",
@@ -63,6 +72,7 @@ def limiting_case_note(domain: str) -> str:
 
 
 def self_check_list() -> list[str]:
+    """The 12-item pre-answer self-check (spec section 25)."""
     return ["Problem correctly understood", "Correct physics domain",
             "Correct governing law", "Correct equation", "Correct assumptions",
             "Units consistent", "Numerical calculation verified",

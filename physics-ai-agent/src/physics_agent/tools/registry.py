@@ -14,6 +14,7 @@ import numpy as np
 
 @dataclass
 class Tool:
+    """Callable tool: name, description, parameter schema, function."""
     name: str
     description: str
     parameters: dict[str, Any]   # JSON-schema-ish {name: {type, description}}
@@ -162,10 +163,12 @@ TOOLS: dict[str, Tool] = {
 
 
 def tool_names() -> list[str]:
+    """Sorted names of all registered tools."""
     return sorted(TOOLS)
 
 
 def call_tool(name: str, **kwargs: Any) -> Any:
+    """Invoke tool by name; unknown names list what exists."""
     if name not in TOOLS:
         raise KeyError(f"Unknown tool '{name}'. Available: {tool_names()}.")
     return TOOLS[name].function(**kwargs)

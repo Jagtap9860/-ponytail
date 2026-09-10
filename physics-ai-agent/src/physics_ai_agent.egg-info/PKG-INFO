@@ -1,12 +1,13 @@
 Metadata-Version: 2.4
 Name: physics-ai-agent
-Version: 0.1.0
+Version: 0.2.0
 Summary: Interactive physics reasoning engine: LLM reasoning + deterministic physics solvers.
 Author: Physics AI Agent contributors
 License: MIT
 Keywords: physics,engineering,vibrations,fea,numerical-methods,ai-agent
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
+License-File: LICENSE
 Requires-Dist: numpy>=1.26
 Requires-Dist: scipy>=1.11
 Requires-Dist: sympy>=1.12
@@ -16,8 +17,12 @@ Requires-Dist: pyyaml>=6.0
 Provides-Extra: dev
 Requires-Dist: pytest>=7.0; extra == "dev"
 Provides-Extra: docs
+Requires-Dist: sphinx>=7.0; extra == "docs"
+Dynamic: license-file
 
 # Physics AI Agent
+
+[![physics-agent CI](https://github.com/Jagtap9860/-ponytail/actions/workflows/physics-agent-ci.yml/badge.svg)](https://github.com/Jagtap9860/-ponytail/actions/workflows/physics-agent-ci.yml)
 
 An **interactive physics reasoning engine**: LLM reasoning up front,
 deterministic computational tools for every calculation.
@@ -85,6 +90,20 @@ print(r)  # fn=1.125 Hz, wn=7.07 rad/s, ...
 - `examples/` — worked basic/engineering/vibration/advanced problems
 - `docs/` — `architecture.md` (system/agent/data/tool design, roadmap),
   `physics-methodology.md`, `contribution-guide.md`
+
+## The Council (adversarial review)
+
+Five egotistic reviewers — a physicist, a numerical analyst, a software
+engineer, a chaos tester, and a docs auditor — hunt bugs, then
+cross-examine *each other's findings* (reproduce-or-refute + severity vote)
+before anything counts. CI fails on open criticals:
+
+```bash
+physics-agent council review            # hunt → cross-examine → verdict
+physics-agent council review --fail-on critical --write council-report.md
+```
+
+Charter + ego scoring: `docs/council.md`.
 
 ## Design guarantees
 

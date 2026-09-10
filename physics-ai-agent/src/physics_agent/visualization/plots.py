@@ -31,6 +31,7 @@ def plot_function(expr: str, x_range: tuple[float, float] = (0, 10),
 
 def plot_time_response(t: np.ndarray, x: np.ndarray, path: str,
                        title: str = "Time response", ylabel: str = "x [m]") -> str:
+    """Plot x(t) to a PNG file."""
     fig, ax = plt.subplots()
     ax.plot(np.asarray(t), np.asarray(x))
     ax.set(xlabel="t [s]", ylabel=ylabel, title=title)
@@ -40,6 +41,7 @@ def plot_time_response(t: np.ndarray, x: np.ndarray, path: str,
 
 def plot_frequency_response(freqs: np.ndarray, mag: np.ndarray, phase: np.ndarray,
                             path: str, title: str = "Frequency response") -> str:
+    """Magnitude/phase (Bode-style) plot to a PNG file."""
     fig, (a1, a2) = plt.subplots(2, 1, sharex=True, figsize=(6, 5))
     a1.semilogy(np.asarray(freqs), np.asarray(mag))
     a1.set(ylabel="|X| [m]", title=title)
@@ -52,6 +54,7 @@ def plot_frequency_response(freqs: np.ndarray, mag: np.ndarray, phase: np.ndarra
 
 def plot_fft_spectrum(freqs: np.ndarray, amp: np.ndarray, path: str,
                       title: str = "Amplitude spectrum") -> str:
+    """Stem amplitude-spectrum plot to a PNG file."""
     fig, ax = plt.subplots()
     ax.stem(np.asarray(freqs), np.asarray(amp), basefmt=" ")
     ax.set(xlabel="f [Hz]", ylabel="amplitude", title=title)

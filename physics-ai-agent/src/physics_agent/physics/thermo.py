@@ -28,6 +28,7 @@ def ideal_gas(p: float | None = None, V: float | None = None, n: float | None = 
 
 
 def carnot_efficiency(T_hot: float, T_cold: float) -> PhysicsResult:
+    """Carnot limit eta = 1 - Tc/Th (absolute kelvin)."""
     require_positive(T_hot=T_hot, T_cold=T_cold)
     if T_cold >= T_hot:
         raise ValueError("Need T_cold < T_hot.")
@@ -43,12 +44,14 @@ def conduction_1d(k: float, A: float, T1: float, T2: float, L: float) -> Physics
 
 
 def convection(h: float, A: float, Ts: float, Tinf: float) -> PhysicsResult:
+    """Newton cooling Q = h*A*(Ts-Tinf)."""
     require_positive(h=h, A=A)
     return PhysicsResult("heat_rate", h * A * (Ts - Tinf), "W",
                          "Q = hA(Ts−T∞)", "analytic", ["h uniform over surface"])
 
 
 def radiation(eps: float, A: float, Ts: float, Tsurr: float) -> PhysicsResult:
+    """Gray-surface radiation Q = eps*sigma*A*(Ts^4-Tsurr^4)."""
     require_positive(A=A)
     if not 0 < eps <= 1:
         raise ValueError("Emissivity must be in (0, 1].")

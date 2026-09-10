@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import numpy as np
 
@@ -14,29 +15,37 @@ from physics_agent.physics.base import PhysicsResult, require_positive
 from physics_agent.solvers.eigenvalue import generalized_eigen
 from physics_agent.solvers.ode import solve_sdof
 
+if TYPE_CHECKING:
+    from physics_agent.solvers.ode import ODEResult
+
 
 @dataclass
 class SDOF:
+    """Single-degree-of-freedom oscillator: mass m, damping c, stiffness k."""
     m: float
     c: float
     k: float
 
     @property
     def wn(self) -> float:
+        """Undamped natural circular frequency sqrt(k/m) [rad/s]."""
         require_positive(m=self.m, k=self.k)
         return math.sqrt(self.k / self.m)
 
     @property
     def fn(self) -> float:
+        """Undamped natural frequency wn/2pi [Hz]."""
         return self.wn / (2 * math.pi)
 
     @property
     def zeta(self) -> float:
+        """Damping ratio c/(2*sqrt(k*m))."""
         require_positive(m=self.m, k=self.k)
         return self.c / (2 * math.sqrt(self.k * self.m))
 
     @property
     def wd(self) -> float:
+        """Damped frequency wn*sqrt(1-zeta^2); raises if not oscillatory."""
         z = self.zeta
         if z >= 1:
             raise ValueError(f"Not oscillatory: zeta={z:.3f} >= 1.")
@@ -44,6 +53,7 @@ class SDOF:
 
     @property
     def Q(self) -> float:
+        """Quality factor 1/(2*zeta)."""
         return 1.0 / (2 * self.zeta) if self.zeta > 0 else math.inf
 
 
@@ -136,7 +146,7 @@ def campbell_critical_speeds(fn0_hz: float, n_modes: int = 1) -> list[float]:
 
 
 def free_decay_response(m: float, c: float, k: float, x0: float = 1.0,
-                        t_end: float | None = None, n: int = 2000):
+                        t_end: float | None = None, n: int = 2000) -> "ODEResult":
     """Numeric free-decay via solve_ivp (cross-check for analytic ωd)."""
     s = SDOF(m, c, k)
     T = 1.0 / s.fn

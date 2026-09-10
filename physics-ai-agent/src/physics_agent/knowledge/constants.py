@@ -8,6 +8,7 @@ from pathlib import Path
 
 @dataclass(frozen=True)
 class Constant:
+    """Physical constant: symbol, SI value, unit, source, precision."""
     symbol: str
     name: str
     value: float
@@ -56,5 +57,6 @@ def get_constant(symbol: str) -> Constant:
 
 
 def search_constants(query: str) -> list[Constant]:
+    """Substring search over symbols and names."""
     q = query.lower()
     return [c for c in CONSTANTS.values() if q in c.symbol.lower() or q in c.name.lower()]

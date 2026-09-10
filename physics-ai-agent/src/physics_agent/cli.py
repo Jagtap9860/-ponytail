@@ -14,12 +14,14 @@ def _orch(args: argparse.Namespace) -> Orchestrator:
 
 
 def cmd_solve(args: argparse.Namespace) -> int:
+    """CLI: solve one problem and print the report."""
     ans = _orch(args).solve(args.problem)
     print(ans.report())
     return 0
 
 
 def cmd_chat(args: argparse.Namespace) -> int:
+    """CLI: interactive REPL with level/mode switching."""
     orch = _orch(args)
     print(f"Physics AI Agent (level={orch.level}, mode={orch.mode}). "
           "Type 'quit' to exit, 'level N' / 'mode NAME' to switch.")
@@ -51,6 +53,7 @@ def cmd_chat(args: argparse.Namespace) -> int:
 
 
 def cmd_convert(args: argparse.Namespace) -> int:
+    """CLI: convert one quantity between units."""
     from physics_agent.units.converter import UnitConverter
     q = UnitConverter.parse(args.quantity)
     print(f"{q.value} {q.unit} = {UnitConverter.convert(q.value, q.unit, args.to)} {args.to}")
@@ -58,6 +61,7 @@ def cmd_convert(args: argparse.Namespace) -> int:
 
 
 def cmd_constants(args: argparse.Namespace) -> int:
+    """CLI: list or search physical constants."""
     from physics_agent.knowledge.constants import CONSTANTS, search_constants
     items = search_constants(args.search) if args.search else list(CONSTANTS.values())
     for c in items:
@@ -66,6 +70,7 @@ def cmd_constants(args: argparse.Namespace) -> int:
 
 
 def cmd_formulas(args: argparse.Namespace) -> int:
+    """CLI: list or search the formula database."""
     from physics_agent.knowledge.formulas import FORMULAS, search_formulas
     items = search_formulas(args.search) if args.search else list(FORMULAS.values())
     for f in items[: (args.limit or 50)]:
@@ -75,6 +80,7 @@ def cmd_formulas(args: argparse.Namespace) -> int:
 
 
 def cmd_tools(_: argparse.Namespace) -> int:
+    """CLI: list callable tools."""
     from physics_agent.tools import TOOLS
     for name, t in sorted(TOOLS.items()):
         print(f"{name:28s} {t.description}")
@@ -82,6 +88,7 @@ def cmd_tools(_: argparse.Namespace) -> int:
 
 
 def cmd_demo(args: argparse.Namespace) -> int:
+    """CLI: run a canned demo problem."""
     demos = {
         "spring": "A 10 kg mass is attached to a spring with k = 500 N/m. Find its natural frequency.",
         "machine-vibration": ("I have a 20 kg machine mounted on a spring with stiffness "
@@ -98,7 +105,28 @@ def cmd_demo(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_council(args: argparse.Namespace) -> int:
+    """CLI: run the adversarial review council."""
+    from physics_agent.council.debate import run_council
+    from physics_agent.council.reporter import render_markdown, render_text
+    verdict = run_council(llm_advisory=args.llm_advisory)
+    out = render_markdown(verdict) if args.format == "md" else render_text(verdict)
+    if args.write:
+        with open(args.write, "w", encoding="utf-8") as fh:
+            fh.write(out)
+        print(f"council report → {args.write}")
+    else:
+        print(out)
+    if args.fail_on != "none" and verdict.open_at(args.fail_on):
+        ids = ", ".join(f.id for f in verdict.open_at(args.fail_on))
+        print(f"council: FAIL — open {args.fail_on}+ findings: {ids}")
+        return 1
+    print("council: PASS")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
+    """Build the physics-agent argument parser."""
     p = argparse.ArgumentParser(prog="physics-agent", description="Interactive physics reasoning engine")
     p.add_argument("--level", type=int, default=0, help="explanation level 1-4 (0=from env)")
     p.add_argument("--mode", default="", help="direct|guided|teaching|exam|research|engineering")
@@ -124,10 +152,19 @@ def build_parser() -> argparse.ArgumentParser:
     d = sub.add_parser("demo", help="run a canned demo")
     d.add_argument("which", help="spring|machine-vibration|projectile|resonance")
     d.set_defaults(func=cmd_demo)
+    cc = sub.add_parser("council", help="adversarial review council")
+    cc_sub = cc.add_subparsers(dest="council_cmd", required=True)
+    cr = cc_sub.add_parser("review", help="run the full council session")
+    cr.add_argument("--format", choices=["md", "text"], default="text")
+    cr.add_argument("--write", default="", help="write report to file")
+    cr.add_argument("--fail-on", choices=["critical", "high", "none"], default="none")
+    cr.add_argument("--llm-advisory", action="store_true")
+    cr.set_defaults(func=cmd_council)
     return p
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point; returns the process exit code."""
     args = build_parser().parse_args(argv)
     try:
         return int(args.func(args))

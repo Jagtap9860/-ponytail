@@ -19,6 +19,7 @@ def snell(n1: float, theta1_deg: float, n2: float) -> PhysicsResult:
 
 
 def critical_angle(n_core: float, n_clad: float) -> PhysicsResult:
+    """TIR critical angle thc = asin(n_clad/n_core)."""
     if n_core <= n_clad:
         raise ValueError("TIR needs n_core > n_clad.")
     return PhysicsResult("critical_angle", math.degrees(math.asin(n_clad / n_core)), "deg",
@@ -40,6 +41,7 @@ def thin_lens(f: float | None = None, do: float | None = None,
 
 def wave_speed(f: float | None = None, lam: float | None = None,
                v: float | None = None) -> PhysicsResult:
+    """Solve v = f*lambda for the missing quantity."""
     args = {"f": f, "lambda": lam, "v": v}
     if sum(x is None for x in args.values()) != 1:
         raise ValueError("Provide exactly two of f, lambda, v.")
@@ -61,6 +63,7 @@ def doppler_sound(f: float, v_sound: float = 343.0, v_obs: float = 0.0,
 
 
 def sound_pressure_level(p_rms: float, p_ref: float = 20e-6) -> PhysicsResult:
+    """SPL = 20*log10(p/p_ref) in dB."""
     require_positive(p_rms=p_rms, p_ref=p_ref)
     return PhysicsResult("spl", 20 * math.log10(p_rms / p_ref), "dB",
                          "SPL = 20log10(p/pref)", "analytic")

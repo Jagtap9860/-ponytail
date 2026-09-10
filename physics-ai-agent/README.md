@@ -1,5 +1,7 @@
 # Physics AI Agent
 
+[![physics-agent CI](https://github.com/Jagtap9860/-ponytail/actions/workflows/physics-agent-ci.yml/badge.svg)](https://github.com/Jagtap9860/-ponytail/actions/workflows/physics-agent-ci.yml)
+
 An **interactive physics reasoning engine**: LLM reasoning up front,
 deterministic computational tools for every calculation.
 
@@ -66,6 +68,20 @@ print(r)  # fn=1.125 Hz, wn=7.07 rad/s, ...
 - `examples/` — worked basic/engineering/vibration/advanced problems
 - `docs/` — `architecture.md` (system/agent/data/tool design, roadmap),
   `physics-methodology.md`, `contribution-guide.md`
+
+## The Council (adversarial review)
+
+Five egotistic reviewers — a physicist, a numerical analyst, a software
+engineer, a chaos tester, and a docs auditor — hunt bugs, then
+cross-examine *each other's findings* (reproduce-or-refute + severity vote)
+before anything counts. CI fails on open criticals:
+
+```bash
+physics-agent council review            # hunt → cross-examine → verdict
+physics-agent council review --fail-on critical --write council-report.md
+```
+
+Charter + ego scoring: `docs/council.md`.
 
 ## Design guarantees
 

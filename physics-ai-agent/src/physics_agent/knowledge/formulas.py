@@ -8,12 +8,14 @@ from pathlib import Path
 
 @dataclass(frozen=True)
 class Variable:
+    """Formula variable: meaning + SI unit."""
     meaning: str = ""
     si_unit: str = ""
 
 
 @dataclass(frozen=True)
 class Formula:
+    """Formula record with assumptions, validity, pitfalls."""
     name: str
     equation: str
     domain: str
@@ -29,6 +31,7 @@ class Formula:
     source: str = ""
 
     def describe(self) -> str:
+        """Human-readable multi-line formula card."""
         lines = [f"{self.name}: {self.equation}  [{self.domain}]"]
         for sym, var in self.variables.items():
             lines.append(f"  {sym}: {var.meaning} [{var.si_unit}]")
@@ -74,6 +77,7 @@ FORMULAS: dict[str, Formula] = _load()
 
 
 def lookup_formula(name: str) -> Formula:
+    """Fetch a formula by exact (case-insensitive) name."""
     if name in FORMULAS:
         return FORMULAS[name]
     low = name.lower()

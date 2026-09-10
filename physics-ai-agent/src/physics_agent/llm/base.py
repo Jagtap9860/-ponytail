@@ -7,6 +7,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Message:
+    """One chat message: role (system/user/assistant) + content."""
     role: str  # system | user | assistant
     content: str
 
@@ -18,7 +19,9 @@ class LLMProvider(ABC):
 
     @abstractmethod
     def complete(self, messages: list[Message], max_tokens: int = 1024) -> str:
+        """Complete a chat; return the assistant text."""
         ...
 
     def explain(self, system: str, user: str) -> str:
+        """Two-message (system+user) convenience wrapper."""
         return self.complete([Message("system", system), Message("user", user)])

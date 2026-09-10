@@ -17,12 +17,16 @@ from physics_agent.agent.verification import (
     limiting_case_note,
 )
 from physics_agent.knowledge import concepts as _concepts
+from physics_agent.knowledge.constants import get_constant
 from physics_agent.knowledge.formulas import search_formulas
 from physics_agent.units.converter import UnitConverter
+
+_G0 = get_constant("g0").value
 
 
 @dataclass
 class Answer:
+    """Full answer: result, verification, sections, level, mode."""
     text: str
     classification: Classification
     plan: SolutionPlan
@@ -33,6 +37,7 @@ class Answer:
     mode: str = "direct"
 
     def report(self) -> str:
+        """Render the report (short form for low-complexity direct answers)."""
         resonance = isinstance(self.result, dict) and "conditions_for_true_resonance" in self.result
         simple = self.classification.math_complexity == "low" and self.mode == "direct" and not resonance
         return render_report(self.sections, self.level, self.mode, simple=simple,
@@ -82,6 +87,7 @@ class Orchestrator:
     """Runs the full workflow. LLM use is narrative-only; numbers come from tools."""
 
     def __init__(self, level: int = 2, mode: str = "direct", llm: Any | None = None):
+        """Create an orchestrator with explanation level and mode."""
         if level not in (1, 2, 3, 4):
             raise ValueError("level must be 1..4")
         if mode not in _modes.MODES:
@@ -90,6 +96,7 @@ class Orchestrator:
 
     # ---------------- main entry ----------------
     def solve(self, text: str) -> Answer:
+        """Run the 10-step workflow on free-text problem input."""
         text = text.strip()
         if not text:
             raise ValueError("Empty problem.")
@@ -304,7 +311,7 @@ class Orchestrator:
                 "Unit Check": "[N/kg] = [m/s²] ✓" if r.name == "acceleration" else "SI consistent ✓",
                 "Final Answer": f"**{r.name} = {r.value:.6g} {r.unit}**",
                 "Physical Interpretation": f"{r.value:.3g} {r.unit}" +
-                    (f" ≈ {r.value/9.80665:.2f} g" if r.name == "acceleration" else ""),
+                    (f" ≈ {r.value/_G0:.2f} g" if r.name == "acceleration" else ""),
                 "Verification": "Limiting: F→0 ⇒ a→0 ✓",
             }
             return Answer(text, cls, plan, r, VerificationReport(
