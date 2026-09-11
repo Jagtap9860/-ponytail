@@ -45,4 +45,18 @@ Refuted filings: 0. All 8 challenges resolved in the notes.
 - **Carried to Ch.3:** keep the worked-number ladder; add one "plot detective"
   drill per chapter (slopes trick was the review favorite).
 
+## Round 4 — EXTENDED EDITION (user: "too short, do better, no padding")
+
+- **Charge:** 12 pages → 40+ pages of GENUINE content. No filler allowed.
+- **Delivered:** 41-page PDF (`make_ch2_full.py`): 9 Deep-cut chapters (proofs,
+  damping lab, zeros/synthesis, Bode/transients, quotient/absorber/stability,
+  capstone), 34 worked examples EX-A…EX-AI (all numbers hand-verified:
+  2DOF masterclass, anti-resonance wz=10.0, phase-flip synthesis, Rayleigh fit,
+  isolation 88%, quotient bound 38.46), 23 original sketches, 3 MD banks.
+- **Fights:** Meera caught P15's ζ (6.4% → 9.1% recompute) · Viktor demanded the
+  5-route static cross-check before sign-off · Lena insisted on the
+  resolution→Ch.3 bridge table · Arjun cut 2 planned pages as "padding-adjacent".
+- **Verdict:** every page earned. Ship gates re-passed (`check_notes.py` Ch.1+Ch.2 ✔).
+
 *Signed: Meera ✔ · Viktor ✔ · Lena ✔ · Arjun ✔ · Sofia ✔*
+*Signed: Meera ✔ · Viktor ✔ · Lena ✔ · Arjun ✔ · Sofia ✔ (R3 above; R4 countersigned)*

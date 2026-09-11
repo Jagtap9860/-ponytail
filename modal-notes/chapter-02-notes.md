@@ -482,5 +482,77 @@ potatoes? ☐ drive-point alternation intact? ☐ coherence ≈ 1 in band?
 - **Global property** — same for all FRFs (poles, frequencies, damping).
 - **Mode superposition truncation** — keeping m≪n modes + residual compensation.
 
+## 🏦 Bank 1 — Formula + symbol bank (extended edition)
+
+| # | Formula | Reads as |
+|---|---------|----------|
+| 1 | `m ẍ + c ẋ + k x = f` | The equation; everything descends from it |
+| 2 | `ωₙ=√(k/m)`, `ζ=c/(2√(km))`, `ωd=ωₙ√(1−ζ²)` | Frequency, damping, damped frequency |
+| 3 | `p₁,₂ = −ζωₙ ± jωd` | Poles: decay (real) + ring (imag) |
+| 4 | `H(s) = (1/m)/((s−p₁)(s−p₂)) = A₁/(s−p₁)+A₂/(s−p₂)` | Three costumes, one function |
+| 5 | `A₁ = (1/m)/(p₁−p₂) = 1/(j2mωd)` | Cover-up residue (pure imaginary) |
+| 6 | `H(jω) = 1/((k−mω²)+jcω)` | FRF: slice of H(s) at s=jω |
+| 7 | `X/Xst = 1/√((1−β²)²+(2ζβ)²)`, `tan φ = 2ζβ/(1−β²)` | Amplification + phase |
+| 8 | `β_D=√(1−2ζ²)`, `β_V=1`, `β_A=1/√(1−2ζ²)` | D/V/A peaks sit apart |
+| 9 | `Q=1/(2ζ)=ωₙ/Δω`, `δ≈2πζ`, `ζ=δ/√(4π²+δ²)` | Q, bandwidth, log-dec |
+| 10 | `V=jωD`, `A=−ω²D` | D/V/A conversion (+90°/×ω each step) |
+| 11 | `det([K]−λ[M])=0`, `λ=ω²` | Eigenvalues = squared frequencies |
+| 12 | `{u}ₛᵀ[M]{u}ᵣ=0`, `{u}ₛᵀ[K]{u}ᵣ=0` | Orthogonality (distinct freqs) |
+| 13 | `mᵣ={φ}ᵀ[M]{φ}`, `kᵣ={φ}ᵀ[K]{φ}`, `ω²=kᵣ/mᵣ` | Modal mass/stiffness |
+| 14 | `H(ω)=Σ {u}{u}ᵀ/(kᵣ−ω²mᵣ+jωcᵣ)` | FRF sum (shape face) |
+| 15 | `Hᵢⱼ=Σ Aᵢⱼ/(jω−p)+conj` | FRF sum (residue face) |
+| 16 | `hᵢⱼ(0)=ΣA/ω²=[K]⁻¹ᵢⱼ` | Static receipt (residues must pay it) |
+| 17 | `C=a[M]+b[K]` → `ζᵣ=a/(2ωᵣ)+bωᵣ/2` | Rayleigh damping (U-curve) |
+| 18 | `ω²(u)={u}ᵀ[K]{u}/{u}ᵀ[M]{u} ≥ ω₁²` | Rayleigh quotient (upper bound!) |
+| 19 | `Δf ≤ (2ζfₙ)/5`, `T=1/Δf` | Resolution rule (theory sizes the test) |
+| 20 | `τ=1/(ζωₙ)`, wait 4–5τ | Transient decay before trusting data |
+
+## 🏦 Bank 2 — FAQ + interview rapid-fire (extended edition)
+
+**FAQ round 1 (core):** peak≠fₙ (D below/V at/A above) · ωₙ never moves, only ωd dips ·
+negative imag = residue sign, not broken data · ODS≈shape only AT isolated resonance ·
+true poles never differ between FRFs · more modes ≠ better · 90°+peak+coherence+repeat =
+resonance · scaling: pattern vs level · drive zeros interlace, cross zeros wander ·
+complex modes need non-proportional damping.
+
+**FAQ round 2 (deep):** collocation constrains drive zeros; cross numerators are free ·
+proportional damping → real residues; general viscous → complex · Rayleigh `bω/2`
+overdamps high modes — fit band = trust band · plot Bode mag first, phase to confirm,
+Nyquist only for circle fits · mounts avoid resonance (tune low), absorbers plant a
+zero ON it · one-line Ch.2: *poles say when, residues say where, shapes say how*.
+
+**Interview rapid-fire (12):** poles = damping+freq roots · residues = shapeᵢ×shapeⱼ
+strengths · reciprocity hᵢⱼ=hⱼᵢ · global = poles, local = residues · 90° = resonance ·
+ζ from bandwidth/ring-down · peak ≠ fₙ · drive = co-located, valleys alternate ·
+truncation + residuals · V/F peaks exactly at ωₙ · real vs complex modes ·
+modes = standing waves of the structure.
+
+## 🏦 Bank 3 — Deep-cuts digest (extended edition)
+
+**Core proofs:** orthogonality (`{u}ₛᵀ[M]{u}ᵣ=0` via premultiply-transpose-subtract) ·
+FRF sum (expand `X=Uq`, project, solve scalars, recombine) · log-dec (`δ=2πζ/√(1−ζ²)`)
+· Q from half-power (`Δβ≈2ζ` → `Q=1/(2ζ)`) · conjugate pairs = one real sine.
+
+**Damping lab:** Rayleigh fit (EX-V: `a=0.124`, `b=0.00324` through 2%@6.18 + 3%@16.18;
+extrapolation overdamps: 9.8% at w=60!) · hysteretic `k(1+jη)`, `η≈2ζ`, freq-domain
+ONLY · 3 scalings, one residue (EX-X: 0.724 three ways).
+
+**Zeros/synthesis:** anti-resonance derived — EX-M `wz=10.0 rad/s` interlaces 6.18/16.18 ·
+synthesis at mode-2 reso: `h₁₂=−0.0020+j0.0285` (negative residue flips phase to +94°) ·
+absorber design (EX-AI: 5 kg + 123 kN/m plants a zero at 25 Hz) · transmissibility
+(EX-AG: 88% isolation; more damping WORSENS high-f isolation).
+
+**Bode/transients:** asymptotes navigate, exact math docks (EX-AE) · wait 4–5τ
+(EX-AF: τ=0.5 s → 2.5 s) · transient trio + beats kill log-dec on close modes ·
+Rayleigh quotient bounds from above (EX-AH: 50.0 → 38.46 vs true 38.2).
+
+**Capstone numbers:** poles `−0.124±j6.179`, `−0.485±j16.173` · h₁₁ zeros `±j10.0` ·
+5-route static cross-check all = 0.0100 · 34 worked examples EX-A…EX-AI indexed in §Deep-9.
+
+**Resolution bridge → Ch.3:** `Δf ≤ 2ζfₙ/5` (z=1%@100 Hz → Δf≤0.4 Hz, T≥2.5 s) ·
+SISO/SIMO/MISO/MIMO map · state-space first-order form · rigid-body modes (free-free,
+soft suspension <10% of first flex) · traps wall (rad/s vs Hz, −3 dB from PEAK,
+kN/mm×10⁶, coherence ≠ calibration) · study plans (1-day / 1-week / interview / lab).
+
 *Council sign-off: Meera ✔ theory · Viktor ✔ lab · Lena ✔ signals · Arjun ✔ pedagogy ·
 Sofia ✔ field — dissent: none outstanding (see council log for the fights).*
