@@ -11,6 +11,7 @@ ROOT = pathlib.Path(__file__).parent
 CHAPTERS = {
     # file -> required section markers + chapter label
     "chapter-01-notes.md": ([f"1.{i}" for i in range(1, 10)], "Chapter 1"),
+    "chapter-02-notes.md": ([f"2.{i}" for i in range(1, 5)], "Chapter 2"),
 }
 
 

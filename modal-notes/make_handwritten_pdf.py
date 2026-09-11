@@ -35,6 +35,7 @@ PALE_PINK = colors.HexColor("#FFF0F2")
 PALE_GREEN = colors.HexColor("#EDF9F0")
 
 PAGE_W, PAGE_H = A4
+CHAPTER_LABEL = "Ch.1"  # chapters override after import
 ML, MR, MT, MB = 70, 45, 55, 55
 FRAME_W = PAGE_W - ML - MR
 
@@ -302,7 +303,7 @@ def bg(canvas, doc) -> None:
     if doc.page > 1:
         canvas.setFont("Kalam", 9)
         canvas.setFillColor(colors.HexColor("#77809E"))
-        canvas.drawString(ML, 32, "Ch.1 Modal Testing - handwritten notes")
+        canvas.drawString(ML, 32, f"{CHAPTER_LABEL} Modal Testing - handwritten notes")
         canvas.drawRightString(PAGE_W - MR, 32, f"p. {doc.page}")
     canvas.restoreState()
 
