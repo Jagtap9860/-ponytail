@@ -24,3 +24,8 @@ ponytail-*.gif
 
 # agentic benchmark workspaces (agent output, kept locally for inspection)
 benchmarks/agentic/runs/
+
+# Modal-notes: never commit the book PDFs (copyrighted + heavy).
+# Only our own generated notes PDFs (chapter-*-handwritten-notes.pdf) are allowed.
+modal-notes/modal*.pdf
+modal-notes/book-*.pdf

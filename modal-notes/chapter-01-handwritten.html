@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ch.1 Handwritten Notes — Modal Testing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#1f2a44; --red:#e5484d; --blue:#2f6fed; --green:#1f9d55; --hl:#fff3a3; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:#8b93a3; color:var(--ink);
+    font-family:'Caveat','Shadows Into Light',cursive; font-size:21px; line-height:1.45; }
+  .desk{ max-width:900px; margin:24px auto 60px; padding:0 14px; }
+  .page{ background:repeating-linear-gradient(#fffdf5,#fffdf5 30px,#dfe9f5 31px);
+    border-radius:6px; box-shadow:0 10px 30px rgba(0,0,0,.35);
+    padding:26px 30px 26px 86px; margin:26px 0; position:relative; }
+  .page::before{ content:""; position:absolute; top:0; bottom:0; left:64px; width:2px; background:#f3a3ab; }
+  .tape{ position:absolute; top:-14px; left:50%; transform:translateX(-50%) rotate(-3deg);
+    background:rgba(255,243,163,.85); padding:2px 26px; font-size:19px;
+    box-shadow:0 2px 5px rgba(0,0,0,.2); border-left:1px dashed #c9b458; border-right:1px dashed #c9b458; }
+  h1{ font-size:52px; margin:.1em 0 0; line-height:1.05; }
+  h2{ font-size:36px; margin:.2em 0 .3em; color:var(--blue); }
+  h2 .n{ display:inline-block; background:var(--ink); color:#fff; border-radius:50%;
+    width:44px; height:44px; text-align:center; line-height:44px; font-size:28px; margin-right:8px; }
+  .sub{ font-size:25px; color:#556; }
+  .hl{ background:linear-gradient(transparent 55%, var(--hl) 55%); padding:0 4px; }
+  .box{ border:3px solid var(--ink); border-radius:14px 4px 14px 4px; padding:10px 14px; margin:12px 0; background:rgba(255,255,255,.6); }
+  .box.red{ border-color:var(--red); } .box.green{ border-color:var(--green); } .box.blue{ border-color:var(--blue); }
+  .tag{ display:inline-block; font-size:19px; border:2px solid var(--ink); border-radius:20px;
+    padding:0 12px; margin:2px 4px 2px 0; background:#fff; transform:rotate(-1deg); }
+  .tag.trap{ border-color:var(--red); color:var(--red); transform:rotate(1.5deg); }
+  .tag.lab{ border-color:var(--green); color:var(--green); }
+  ul{ margin:8px 0; padding-left:26px; } li{ margin:4px 0; }
+  table{ border-collapse:collapse; width:100%; margin:10px 0; font-size:20px; background:rgba(255,255,255,.65); }
+  th,td{ border:2px solid var(--ink); padding:4px 8px; text-align:left; }
+  th{ background:var(--hl); }
+  svg{ display:block; width:100%; height:auto; background:rgba(255,255,255,.55);
+    border:2px dashed #889; border-radius:10px; margin:10px 0; }
+  .formula{ font-size:27px; text-align:center; margin:8px 0; }
+  .margin-note{ position:absolute; left:6px; width:52px; font-size:16px; color:var(--red); transform:rotate(-90deg); transform-origin:left top; }
+  .foot{ text-align:center; color:#eee; font-size:22px; }
+  a{ color:var(--blue); }
+  @media print{ body{ background:#fff; } .desk{ margin:0; } .page{ box-shadow:none; } }
+</style>
+</head>
+<body>
+<div class="desk">
+
+  <!-- COVER -->
+  <div class="page">
+    <div class="tape">Modal Testing · A Practitioner's Guide</div>
+    <h1>Ch. 1 — Experimental Modal Analysis <span class="hl">without tears</span></h1>
+    <p class="sub">Detailed handwritten-style notes · for a MechE fresher who knows basic vibrations · by the 5-PhD Notes Council ✍️</p>
+    <div class="box blue">📌 <b>Whole chapter in 1 line:</b> a structure = a <b>team of SDOF oscillators</b> glued together.
+    Modal analysis names each player → <b>frequency + damping + shape</b>. Everything else = <i>how to see them clearly</i>.</div>
+    <div><span class="tag">📌 key idea</span><span class="tag lab">🧪 lab tip</span><span class="tag trap">⚠️ trap!</span><span class="tag">🔗 you know this</span></div>
+  </div>
+
+  <!-- PRIMER -->
+  <div class="page">
+    <div class="tape">start here!</div>
+    <h2><span class="n">0</span>Primer — SDOF → modes 🔗</h2>
+    <p class="formula">m·ẍ + c·ẋ + k·x = f(t) &nbsp;&nbsp;→&nbsp;&nbsp; f<sub>n</sub> = (1/2π)·√(k/m)</p>
+    <div class="box green">You know <b>1 mass → 1 peak</b>. A plate/beam = <b>many masses → many peaks</b>.
+    Each peak = one “hidden SDOF” = one <b>mode</b>. Ch.1 teaches you to <i>see</i> each one. 🔗</div>
+    <ul>
+      <li>Resonance (SDOF) → <b>every</b> mode resonates in its <b>own shape</b></li>
+      <li>Damping ζ → every mode gets <b>its own</b> damping</li>
+      <li>Messy time trace → <b>FFT → FRF</b> makes peaks obvious</li>
+    </ul>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="page">
+    <div class="tape">§1.1 · the big picture</div>
+    <h2><span class="n">1</span>What even IS modal analysis?</h2>
+    <div class="box"><b>Cantilever logic:</b> characteristics → <b>+ loads</b> → response → <b>+ spec</b> → pass/fail.
+    Modal data is step-1 data: <span class="hl">powerful, but can't judge alone!</span></div>
+    <ul>
+      <li>🖥️ <b>Cabinet story:</b> structural dynamics = full movie (all inputs → total chaos);
+      modal = cast list. In <b>frequency domain</b>, chaos → clear peaks <i>at the modes</i>.</li>
+      <li>📌 <b>Modes = band-pass filters:</b> response = Σ (mode filter × input). Starve a mode of input → tiny peak!</li>
+      <li>🔬 <b>Plate test:</b> constant-force sine sweep → response breathes up/down → <b>FFT → FRF with 4 peaks</b> → dwell at each peak with 45 sensors → <b>bend, twist, bend-2, twist-2</b> 🎯</li>
+    </ul>
+    <svg viewBox="0 0 600 200" role="img" aria-label="FRF sketch with 4 peaks">
+      <text x="12" y="24" font-size="20" fill="#1f2a44">FRF magnitude (my sketch ✏️)</text>
+      <line x1="40" y1="160" x2="580" y2="160" stroke="#1f2a44" stroke-width="2"/>
+      <line x1="40" y1="160" x2="40" y2="20" stroke="#1f2a44" stroke-width="2"/>
+      <path d="M40,160 L120,155 L170,60 L220,155 L290,150 L340,70 L390,150 L450,148 L490,90 L530,150 L580,158"
+        fill="none" stroke="#e5484d" stroke-width="3" stroke-linejoin="round"/>
+      <text x="155" y="50" font-size="18" fill="#2f6fed">M1 bend</text>
+      <text x="325" y="60" font-size="18" fill="#2f6fed">M2 twist</text>
+      <text x="478" y="80" font-size="18" fill="#2f6fed">M3/M4…</text>
+      <text x="440" y="182" font-size="18" fill="#1f2a44">frequency →</text>
+    </svg>
+    <div class="box red">🍲 <b>Cookbook:</b> each loading “cooks” its own subset of modes. &nbsp; 🎻 <b>Orchestra:</b> total music hides the culprit — <b>audition each mode separately!</b> &nbsp; 🛝 <b>Council bonus:</b> swings — push in rhythm = resonance!</div>
+  </div>
+
+  <!-- 1.2 -->
+  <div class="page">
+    <div class="tape">§1.2 · the money plot</div>
+    <h2><span class="n">2</span>FRF = output ÷ input</h2>
+    <p class="formula">H(f) = X(f) / F(f) &nbsp; <i>(complex! mag+phase ⟺ real+imag)</i></p>
+    <ul>
+      <li>3 push pts × 3 measure pts = <b>3×3 matrix h<sub>out,in</sub></b> (row = response, col = force)</li>
+      <li>🎯 <b>Drive point h<sub>ii</sub></b> (push+measure same spot) — memorize:
+        <span class="hl">peak↔valley alternate</span> · <span class="hl">phase ∓180°</span> · <span class="hl">imag peaks same direction</span></li>
+      <li>📌 <b>Reciprocity: h<sub>ij</sub> = h<sub>ji</sub></b> → measure <b>1 row OR 1 column</b> only!</li>
+    </ul>
+    <div class="box red">⚠️ <b>NODE RULE:</b> reference on a mode's node ⇒ that mode <b>vanishes</b> from every FRF. Never park your reference on a node!!</div>
+    <svg viewBox="0 0 600 170" role="img" aria-label="Drive point vs cross FRF">
+      <text x="12" y="22" font-size="19" fill="#1f2a44">drive point h33 ✏️</text>
+      <path d="M20,130 L90,128 L130,50 L170,132 L230,135 L270,45 L310,132 L360,130" fill="none" stroke="#1f9d55" stroke-width="3"/>
+      <text x="120" y="145" font-size="16">peak v valley v peak… ✓</text>
+      <text x="392" y="22" font-size="19" fill="#1f2a44">cross FRF ✏️</text>
+      <path d="M390,130 L450,128 L480,60 L510,120 L560,125 L585,70" fill="none" stroke="#2f6fed" stroke-width="3"/>
+      <text x="400" y="150" font-size="16">no alternation needed</text>
+    </svg>
+  </div>
+
+  <!-- 1.3 -->
+  <div class="page">
+    <div class="tape">§1.3 · hammer vs shaker</div>
+    <h2><span class="n">3</span>Shaker vs Impact</h2>
+    <table>
+      <tr><th></th><th>🔨 roving hammer</th><th>📳 shaker</th></tr>
+      <tr><td><b>Gives</b></td><td>one <b>ROW</b> (response ref fixed)</td><td>one <b>COLUMN</b> (force ref fixed)</td></tr>
+      <tr><td><b>Theory</b></td><td colspan="2" style="text-align:center">identical! (h<sub>ij</sub>=h<sub>ji</sub>)</td></tr>
+      <tr><td><b>Practice</b></td><td>double hits, tip choice</td><td><b>mass loading</b> + <b>stinger</b> effects!</td></tr>
+    </table>
+    <div class="box">📌 Test article = structure <b>+ everything touching it</b> (suspension, cables, sensors, shaker).
+    🧪 Roving-mass fix: <b>leave all accels mounted</b> or add <b>dummy masses</b>.</div>
+    <div class="box blue"><b>Analyzer chain 🏭:</b> sensor → <b>anti-alias filter</b> → <b>ADC</b> (bits!) → <b>window</b> → <b>FFT</b> →
+    avg spectra → <b>FRF + coherence</b> (0–1 = “% output explained by input”).<br>
+    ⚠️ <b>LEAKAGE = villain #1:</b> FFT thinks your record <i>repeats forever</i> — a cut-off wave smears everywhere. <b>Windows = the tax you pay to stop it.</b></div>
+  </div>
+
+  <!-- 1.4 + 1.5 -->
+  <div class="page">
+    <div class="tape">§1.4 + §1.5 · testing craft</div>
+    <h2><span class="n">4</span>Impact 🔨 &amp; shaker 📳 essentials</h2>
+    <div class="box green">🔨 <b>TIP = frequency knob:</b> <span class="hl">hard tip → wide band</span>, soft → narrow.
+    Good = <b>flat spectrum + coherence ≈ 1</b>. Rolloff + dying coherence up high? → tip too soft (or you just don't need those modes 😉).</div>
+    <div class="box">🔨 Ringing past the record? → <b>exponential window</b>. Better cures first:
+    <b>narrower span</b> / <b>more lines</b> (= longer record = natural decay ⏳).</div>
+    <div class="box blue">📳 <b>Best shaker inputs need NO window:</b> <b>Burst random</b> (whole decay fits one record) +
+    <b>Sine chirp</b> (repeats exactly). Plain random + Hanning = easy but <i>still leaks a little</i> 🍔.<br>
+    ✍️ <b>B</b>urst + <b>C</b>hirp = <b>B</b>ye-<b>C</b>iao windows!</div>
+  </div>
+
+  <!-- 1.6 -->
+  <div class="page">
+    <div class="tape">§1.6 · cheat sheet 🪟</div>
+    <h2><span class="n">5</span>Windows — which, when?</h2>
+    <table>
+      <tr><th>Window</th><th>Use when…</th></tr>
+      <tr><td><b>Uniform</b> (= none)</td><td>signal fits record / periodic: impact-decayed, burst, chirp, stepped-sine</td></tr>
+      <tr><td><b>Hanning</b> (bell)</td><td>random / field data — forces ends → 0</td></tr>
+      <tr><td><b>Flat-top</b></td><td>pure sine / calibration — amplitude accuracy!</td></tr>
+      <tr><td><b>Force + Exp</b></td><td>hammer pair: isolate pulse + decay the ringing tail</td></tr>
+    </table>
+    <svg viewBox="0 0 600 140" role="img" aria-label="Window shapes">
+      <text x="30" y="22" font-size="18">uniform ▭</text><rect x="30" y="30" width="110" height="70" fill="none" stroke="#1f2a44" stroke-width="3"/>
+      <text x="180" y="22" font-size="18">hanning 🔔</text><path d="M175,100 Q235,25 295,100" fill="none" stroke="#1f2a44" stroke-width="3"/>
+      <text x="340" y="22" font-size="18">exponential 📉</text><path d="M335,32 Q400,40 470,100" fill="none" stroke="#1f2a44" stroke-width="3"/>
+    </svg>
+    <div class="box red">⚠️ Every window costs <b>peak accuracy + fake extra damping</b>. Still cheaper than leakage!</div>
+  </div>
+
+  <!-- 1.7 -->
+  <div class="page">
+    <div class="tape">§1.7 · shapes from FRFs</div>
+    <h2><span class="n">6</span>Peak-pick → curvefit</h2>
+    <ul>
+      <li>6 pts → 36 FRFs. Read <b>imag-peak heights</b>: M1 ≈ [−1,−1,+1,+1,−1,−1] = <b>bending</b>;
+      M2 = [+2,−2,<b>0,0</b>,−2,+2] = <b>twist + node line</b> 🎯</li>
+      <li>Peak-pick = great start; production = <b>curvefitting</b>:</li>
+    </ul>
+    <p class="formula">measured FRF = Σ SDOF(modeᵢ) + residuals</p>
+    <div class="box blue"><b>Analyst sets 3 things:</b> ① fit <b>band</b> ② <b># modes</b> in it ③ <b>residuals</b> (out-of-band tug).
+    ⚠️ Curvefit can't rescue bad FRFs — measure well first!!</div>
+  </div>
+
+  <!-- 1.8 -->
+  <div class="page">
+    <div class="tape">§1.8 · don't confuse!</div>
+    <h2><span class="n">7</span>Modal vs Operating data</h2>
+    <div class="box">📌 <b>Operating data = response ONLY</b> (forces unknown).
+    <span class="hl">response = FRF × force</span> — FRF picks the dance, force picks the dancers.</div>
+    <ul>
+      <li>Excite <b>near M1</b> → shape ≈ <b>M1</b> (+ whisper of M2) · midway → <b>weird hybrid</b> (M1+M2 mixed!)</li>
+      <li>📌 <b>ODS = Σ modes × force.</b> Without force+FRF you can't see <i>why</i> — that's why we modal-test.</li>
+    </ul>
+    <svg viewBox="0 0 600 130" role="img" aria-label="ODS mixing">
+      <text x="20" y="26" font-size="19">M1 ∿</text><path d="M15,70 Q60,30 105,70" fill="none" stroke="#2f6fed" stroke-width="3"/>
+      <text x="130" y="76" font-size="26">+</text>
+      <text x="160" y="26" font-size="19">M2 ∿∿</text><path d="M155,70 Q180,35 205,70 Q230,105 255,70" fill="none" stroke="#e5484d" stroke-width="3"/>
+      <text x="280" y="76" font-size="26">=</text>
+      <text x="310" y="26" font-size="19">ODS ⁉️</text><path d="M305,70 Q340,25 375,70 Q400,100 440,55 Q470,30 500,70" fill="none" stroke="#1f2a44" stroke-width="3"/>
+    </svg>
+    <table>
+      <tr><th></th><th>Modal data</th><th>Operating data</th></tr>
+      <tr><td><b>Gives</b></td><td>true f, ζ, shapes → <b>SDM + simulation + FEM fix</b></td><td>true in-service behavior</td></tr>
+      <tr><td><b>Can't</b></td><td>judge pass/fail alone</td><td>do SDM/sim; shapes confuse</td></tr>
+    </table>
+    <div class="box green">🗣️ <b>Sofia:</b> “Operating = <i>where it hurts</i> 🩹 · Modal = <i>why + what to change</i> 💊. Collect <b>both</b>!”</div>
+  </div>
+
+  <!-- REVISION -->
+  <div class="page">
+    <div class="tape">§1.9 + revision 📋</div>
+    <h2><span class="n">★</span>One-page revision</h2>
+    <ul>
+      <li>Modes = f + ζ + shape · need loads + spec to judge · modes are <b>filters</b></li>
+      <li>H = X/F · drive-pt: <b>alternate / ∓180° / imag same side</b> · h<sub>ij</sub>=h<sub>ji</sub> · <b>no ref on nodes!</b></li>
+      <li>Hammer = ROW, shaker = COLUMN · chain: sense→AA→ADC→window→FFT→<b>FRF+coherence</b></li>
+      <li>Tip = band knob · ringing → <b>exp window</b> (or longer record) · <b>Burst/Chirp = no window</b></li>
+      <li>Windows: uniform / hanning / flat-top / force+exp · FRF = <b>Σ SDOFs</b> · <b>ODS = Σ modes×force</b></li>
+    </ul>
+    <p class="formula">f<sub>n</sub>=(1/2π)√(k/m) · H=X/F · h<sub>ij</sub>=h<sub>ji</sub> · resp=FRF×force · coh≈1 ✓</p>
+    <div class="box">🔜 <b>Ch.2:</b> the math under all this (SDOF → MDOF). Study loop: every equation → <i>“which Ch.1 picture is this?”</i> 💪</div>
+  </div>
+
+</div>
+<p class="foot">Made by the Modal Notes Council · full detail in <b>chapter-01-notes.md</b> · open this file in a browser for the notebook look 📓</p>
+</body>
+</html>
